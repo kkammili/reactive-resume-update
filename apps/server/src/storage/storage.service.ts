@@ -64,36 +64,37 @@ export class StorageService implements OnModuleInit {
     try {
       // Create a storage bucket if it doesn't exist
       // if it exists, log that we were able to connect to the storage service
-      const bucketExists = await this.client.bucketExists(this.bucketName);
+      // const bucketExists = await this.client.bucketExists(this.bucketName);
 
-      if (bucketExists) {
-        this.logger.log("Successfully connected to the storage service.");
-      } else {
-        const bucketPolicy = JSON.stringify(PUBLIC_ACCESS_POLICY).replace(
-          /{{bucketName}}/g,
-          this.bucketName,
-        );
+      // if (bucketExists) {
+      //   this.logger.log("Successfully connected to the storage service.");
+      // } else {
+      //   const bucketPolicy = JSON.stringify(PUBLIC_ACCESS_POLICY).replace(
+      //     /{{bucketName}}/g,
+      //     this.bucketName,
+      //   );
 
-        try {
-          await this.client.makeBucket(this.bucketName);
-        } catch {
-          throw new InternalServerErrorException(
-            "There was an error while creating the storage bucket.",
-          );
-        }
+      //   try {
+      //     await this.client.makeBucket(this.bucketName);
+      //   } catch {
+      //     throw new InternalServerErrorException(
+      //       "There was an error while creating the storage bucket.",
+      //     );
+      //   }
 
-        try {
-          await this.client.setBucketPolicy(this.bucketName, bucketPolicy);
-        } catch {
-          throw new InternalServerErrorException(
-            "There was an error while applying the policy to the storage bucket.",
-          );
-        }
+      //   try {
+      //     await this.client.setBucketPolicy(this.bucketName, bucketPolicy);
+      //   } catch {
+      //     throw new InternalServerErrorException(
+      //       "There was an error while applying the policy to the storage bucket.",
+      //     );
+      //   }
 
-        this.logger.log(
-          "A new storage bucket has been created and the policy has been applied successfully.",
-        );
-      }
+      //   this.logger.log(
+      //     "A new storage bucket has been created and the policy has been applied successfully.",
+      //   );
+      // }
+      this.logger.log('skipping s3 bucket initialization')
     } catch (error) {
       throw new InternalServerErrorException(error);
     }
