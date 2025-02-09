@@ -9,7 +9,7 @@ pnpm list @prisma/client
 If it's not installed, install it:
 pnpm add @prisma/client
 Run the following command to regenerate the Prisma client:
-pnpm prisma 
+pnpm prisma generate
 pnpm nx serve server
 
 
