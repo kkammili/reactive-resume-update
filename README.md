@@ -6,10 +6,16 @@ To install dependencies, run:
 pnpm install
 ```
 
-### Build Applications
+### Build Entire App
 To build all applications in parallel (3 at a time), run:
 ```sh
 pnpm nx run-many --target=build --all --parallel=3
+```
+
+### Start Entire App
+To build all applications in parallel (3 at a time), run:
+```sh
+pnpm nx run-many --target=serve --all --parallel=3
 ```
 
 ### Prisma Errors Troubleshooting
