@@ -13,8 +13,8 @@ import { builderLoader, BuilderPage } from "../pages/builder/page";
 import { DashboardLayout } from "../pages/dashboard/layout";
 import { ResumesPage } from "../pages/dashboard/resumes/page";
 import { SettingsPage } from "../pages/dashboard/settings/page";
-import { HomeLayout } from "../pages/home/layout";
-import { HomePage } from "../pages/home/page";
+// import { HomeLayout } from "../pages/home/layout";
+// import { HomePage } from "../pages/home/page";
 import { ErrorPage } from "../pages/public/error";
 import { publicLoader, PublicResumePage } from "../pages/public/page";
 import { Providers } from "../providers";
@@ -25,8 +25,8 @@ import { authLoader } from "./loaders/auth";
 export const routes = createRoutesFromElements(
   <Route element={<Providers />}>
     <Route errorElement={<ErrorPage />}>
-      <Route element={<HomeLayout />}>
-        <Route path="/" element={<HomePage />} />
+      <Route path="/">
+        <Route index element={<Navigate replace to="/auth/login" />} />
       </Route>
 
       <Route path="auth">
@@ -56,8 +56,6 @@ export const routes = createRoutesFromElements(
           {/* OAuth Callback */}
           <Route path="callback" loader={authLoader} element={<div />} />
         </Route>
-
-        <Route index element={<Navigate replace to="/auth/login" />} />
       </Route>
 
       <Route path="dashboard">
@@ -90,3 +88,4 @@ export const routes = createRoutesFromElements(
 );
 
 export const router = createBrowserRouter(routes);
+

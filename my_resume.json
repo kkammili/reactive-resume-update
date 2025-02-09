@@ -1,0 +1,89 @@
+{
+  "public": false,
+  "basics": {
+    "name": "Krishnamraju Kammili",
+    "headline": "Accomplished Full Stack Developer and DevOps Engineer",
+    "email": "kkrajus777@gmail.com",
+    "phone": "469-569-6257",
+    "location": { "city": "Plano", "region": "TX", "country": "USA" },
+    "url": { "label": "Web Portfolio", "href": "https://kkammili.com/" },
+    "customFields": [],
+    "photo": { "url": "", "visible": true, "filters": { "size": 100, "border": false, "grayscale": false } }
+  },
+  "sections": {
+    "summary": {
+      "name": "Summary",
+      "columns": 1,
+      "separateLinks": true,
+      "visible": true,
+      "id": "summary",
+      "content": "<p>Accomplished Full Stack Developer and DevOps Engineer with 7-8 years of experience in dynamic environments. Expertise in <strong>React.js, Angular, Vue.js, Node.js, and DevOps methodologies</strong>. Recognized for prototyping over 70 product features annually at Lumen, earning the 2022 Employee of the Year award and recently awarded Most Valuable Associate (MVA) at Fidelity for Q2 2024.</p>"
+    },
+    "experience": {
+      "name": "Experience",
+      "columns": 1,
+      "visible": true,
+      "id": "experience",
+      "items": [
+        {
+          "company": "Fidelity",
+          "position": "Senior Front End Developer",
+          "location": "Raleigh-Durham, North Carolina",
+          "date": { "start": "2023-05", "end": "Present" },
+          "visible": true,
+          "summary": "<ul><li>Led migration of PSW legacy Java codebase to Angular 18, improving system performance.</li><li>Developed Edithub using Angular 18, RxJS, and NgRx Signal Store.</li><li>Integrated Cypress and Jest, maintaining 95%+ test coverage.</li></ul>",
+          "url": ""
+        },
+        {
+          "company": "Lumen",
+          "position": "Senior JavaScript Full Stack Developer",
+          "location": "Littleton, CO",
+          "date": { "start": "2021-10", "end": "2023-05" },
+          "visible": true,
+          "summary": "<ul><li>Led Dycon project, improving global availability and reducing costs by 40%.</li><li>Developed modular SPAs using React, Angular, and Vue.</li></ul>",
+          "url": ""
+        },
+        {
+          "company": "Verizon",
+          "position": "Full Stack Developer (React, Node)",
+          "location": "Irving, TX",
+          "date": { "start": "2019-12", "end": "2021-09" },
+          "visible": true,
+          "summary": "<ul><li>Developed bandwidth adjustment web platform using Node.js.</li><li>Implemented interactive map visualizations using Leaflet.</li></ul>",
+          "url": ""
+        }
+      ]
+    },
+    "education": {
+      "name": "Education",
+      "columns": 1,
+      "visible": true,
+      "id": "education",
+      "type": "basic",
+      "items": [
+        {
+          "institution": "University of Illinois at Springfield, IL",
+          "studyType": "Master of Science",
+          "area": "Computer Science",
+          "score": "GPA: 3.72",
+          "date": { "start": "", "end": "" },
+          "visible": true,
+          "url": ""
+        }
+      ]
+    },
+    "skills": {
+      "name": "Skills",
+      "columns": 1,
+      "visible": true,
+      "id": "skills",
+      "type": "basic",
+      "items": [
+        { "name": "Frontend Technologies", "description": "Advanced", "visible": true, "levelNum": 5, "keywords": ["React.js", "Redux", "Vue.js", "Angular", "Nx Monorepo", "JavaScript", "HTML5", "CSS3"] },
+        { "name": "Frontend Testing", "description": "Advanced", "visible": true, "levelNum": 5, "keywords": ["Enzyme", "Cypress", "Mocha", "Chai", "Jest"] },
+        { "name": "Backend Technologies", "description": "Advanced", "visible": true, "levelNum": 5, "keywords": ["Node.js", "Express", "Nest", "Java", "Spring Boot", "MongoDB", "MySQL", "PostgreSQL", "GraphQL"] },
+        { "name": "DevOps/Tools", "description": "Advanced", "visible": true, "levelNum": 5, "keywords": ["AWS", "Docker", "Jenkins", "Shell Scripting", "Vim", "WebStorm", "CloudFormation", "CloudWatch"] }
+      ]
+    }
+  }
+}
