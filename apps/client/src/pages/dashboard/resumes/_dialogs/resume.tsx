@@ -40,7 +40,7 @@ import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-import { useCreateResume, useDeleteResume, useUpdateResume } from "@/client/services/resume";
+import { useCreateResume, useDeleteResume, useUpdateResume, useUpdateRsmKeywords } from "@/client/services/resume";
 import { useImportResume } from "@/client/services/resume/import";
 import { useDialog } from "@/client/stores/dialog";
 
@@ -55,10 +55,12 @@ export const ResumeDialog = () => {
   const isUpdate = mode === "update";
   const isDelete = mode === "delete";
   const isDuplicate = mode === "duplicate";
+  const isUpdateResume = mode === "updateResume";
 
   const { createResume, loading: createLoading } = useCreateResume();
   const { updateResume, loading: updateLoading } = useUpdateResume();
   const { deleteResume, loading: deleteLoading } = useDeleteResume();
+  const { updateRsmKeywords, loading: updateRsmKeywordsLoading } = useUpdateRsmKeywords();
   const { importResume: duplicateResume, loading: duplicateLoading } = useImportResume();
 
   const loading = createLoading || updateLoading || deleteLoading || duplicateLoading;
@@ -139,6 +141,14 @@ export const ResumeDialog = () => {
     close();
   };
 
+  const onResumeUpdate = async () => {
+    if (!payload.item?.id) return;
+    await updateRsmKeywords({
+      jobDesc: form.getValues().title,
+      resumeData: payload,
+    });
+  };
+
   if (isDelete) {
     return (
       <AlertDialog open={isOpen} onOpenChange={close}>
@@ -158,6 +168,55 @@ export const ResumeDialog = () => {
                   {t`Delete`}
                 </AlertDialogAction>
               </AlertDialogFooter>
+            </form>
+          </Form>
+        </AlertDialogContent>
+      </AlertDialog>
+    );
+  }
+
+  if (isUpdateResume) {
+    return (
+      <AlertDialog open={isOpen} onOpenChange={close}>
+        <AlertDialogContent>
+          <Form {...form}>
+            <form>
+              <AlertDialogHeader>
+                <AlertDialogTitle>{t`Update resume with necessary keywords for job hunt.`}</AlertDialogTitle>
+                <AlertDialogDescription>
+                  {t`Paste job description below to update your resume summary, technical skills and resume points.`}
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+
+              <FormField
+                name="title"
+                control={form.control}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{t`Job Description:`}</FormLabel>
+                    <FormControl>
+                      <textarea {...field} className="w-full flex-1" />
+                    </FormControl>
+                    <FormDescription>
+                      {t`Tip: Enter job description here to update resume with keywords.`}
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <DialogFooter>
+                <div className="flex items-center">
+                  <Button
+                    type="button"
+                    disabled={loading}
+                    className={cn(isCreate && "rounded-r-none")}
+                    onClick={() => onResumeUpdate()}
+                  >
+                    {t`Update Resume`}
+                  </Button>
+                </div>
+              </DialogFooter>
             </form>
           </Form>
         </AlertDialogContent>

@@ -32,3 +32,8 @@ export const useDeleteResume = () => {
 
   return { deleteResume: deleteResumeFn, loading, error };
 };
+
+export const useUpdateRsmKeywords = () => {
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  return { updateRsmKeywords: () => {}, loading: false };
+};

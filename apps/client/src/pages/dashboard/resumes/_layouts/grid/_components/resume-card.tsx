@@ -2,6 +2,7 @@ import { t } from "@lingui/macro";
 import {
   CopySimple,
   FolderOpen,
+  GitDiff,
   Lock,
   LockOpen,
   PencilSimple,
@@ -56,6 +57,11 @@ export const ResumeCard = ({ resume }: Props) => {
     open("delete", { id: "resume", item: resume });
   };
 
+  const onResumeUpdate = () => {
+    open("updateResume", { id: "update-resume", item: resume });
+    // do resume updation here
+  };
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger className="text-left">
@@ -103,6 +109,10 @@ export const ResumeCard = ({ resume }: Props) => {
         <DropdownMenuItem onClick={onDuplicate}>
           <CopySimple size={14} className="mr-2" />
           {t`Duplicate`}
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={onResumeUpdate}>
+          <GitDiff size={14} className="mr-2" />
+          {t`Update`}
         </DropdownMenuItem>
         {resume.locked ? (
           <DropdownMenuItem onClick={onLockChange}>
