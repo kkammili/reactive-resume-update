@@ -5,3 +5,4 @@ export * from "./resume";
 export * from "./resumes";
 export * from "./statistics";
 export * from "./update";
+export * from "./update-resume";
