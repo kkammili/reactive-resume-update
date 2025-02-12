@@ -40,7 +40,7 @@ import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-import { useCreateResume, useDeleteResume, useUpdateResume, useUpdateRsmKeywords } from "@/client/services/resume";
+import { useCreateResume, useDeleteResume, useUpdateResume, useUpdateResumeKeywords } from "@/client/services/resume";
 import { useImportResume } from "@/client/services/resume/import";
 import { useDialog } from "@/client/stores/dialog";
 
@@ -60,7 +60,7 @@ export const ResumeDialog = () => {
   const { createResume, loading: createLoading } = useCreateResume();
   const { updateResume, loading: updateLoading } = useUpdateResume();
   const { deleteResume, loading: deleteLoading } = useDeleteResume();
-  const { updateRsmKeywords, loading: updateRsmKeywordsLoading } = useUpdateRsmKeywords();
+  const { updateRsmKeywords, loading: updateRsmKeywordsLoading } = useUpdateResumeKeywords();
   const { importResume: duplicateResume, loading: duplicateLoading } = useImportResume();
 
   const loading = createLoading || updateLoading || deleteLoading || duplicateLoading;
@@ -145,7 +145,7 @@ export const ResumeDialog = () => {
     if (!payload.item?.id) return;
     await updateRsmKeywords({
       jobDesc: form.getValues().title,
-      resumeData: payload,
+      data: payload.item,
     });
   };
 
