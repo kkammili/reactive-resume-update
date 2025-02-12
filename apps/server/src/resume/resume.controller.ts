@@ -73,6 +73,36 @@ export class ResumeController {
     }
   }
 
+  @Post("updateResume")
+  @UseGuards(TwoFactorGuard)
+  async updateResume(@Body() updateResumeDto: unknown) {
+    await new Promise((resolve) => setTimeout(resolve, 30_000));
+
+    // Return sample resume data
+    return {
+      id: "550e8400-e29b-41d4-a716-446655440000",
+      title: "Senior Software Engineer",
+      slug: "senior-software-engineer",
+      data: {
+        basics: {
+          name: "John Doe",
+          email: "john@example.com",
+          phone: "(555) 123-4567",
+        },
+        work: [
+          {
+            company: "Tech Corp",
+            position: "Software Engineer",
+            startDate: "2018-01-01",
+          },
+        ],
+      },
+      visibility: "public",
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    };
+  }
+
   @Get()
   @UseGuards(TwoFactorGuard)
   findAll(@User() user: UserEntity) {
