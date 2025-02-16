@@ -1,0 +1,21 @@
+/* Visual diff indicators */
+mark {
+  background: #dcfce7; /* Green 100 */
+  border-bottom: 2px solid #22c55e; /* Green 500 */
+  text-decoration: none;
+}
+
+s {
+  background: #fee2e2; /* Red 100 */
+  border-bottom: 2px solid #ef4444; /* Red 500 */
+  text-decoration: none;
+}
+
+.diff-removed {
+  opacity: 0.6;
+  filter: grayscale(1);
+}
+
+.diff-added {
+  background: #dcfce7;
+}

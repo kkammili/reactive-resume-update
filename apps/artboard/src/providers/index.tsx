@@ -4,6 +4,8 @@ import { Outlet } from "react-router";
 
 import { helmetContext } from "../constants/helmet";
 import { useArtboardStore } from "../store/artboard";
+import { updatedResume } from './new.js';
+import { oldResume } from './old.js';
 
 export const Providers = () => {
   const resume = useArtboardStore((state) => state.resume);
@@ -23,10 +25,12 @@ export const Providers = () => {
   }, []);
 
   useEffect(() => {
-    const resumeData = window.localStorage.getItem("resume");
+    // const resumeData = window.localStorage.getItem("resume");
+    // console.log(updatedResume, JSON.parse(resumeData), '<----- check these')
 
-    if (resumeData) setResume(JSON.parse(resumeData));
-  }, [window.localStorage.getItem("resume")]);
+    // if (resumeData) setResume(JSON.parse(resumeData));
+    setResume(updatedResume);
+  }, []);
 
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (!resume) return null;

@@ -21,6 +21,8 @@ import { Fragment } from "react";
 
 import { BrandIcon } from "../components/brand-icon";
 import { Picture } from "../components/picture";
+import { SmartDiff } from "../components/smart-diff";
+import { oldResume } from "../providers/old.js";
 import { useArtboardStore } from "../store/artboard";
 import type { TemplateProps } from "../types/template";
 
@@ -108,11 +110,17 @@ const Summary = () => {
     <section id={section.id}>
       <h4 className="mb-2 text-base font-bold">{section.name}</h4>
 
-      <div
+      {/* <div
         dangerouslySetInnerHTML={{ __html: sanitize(section.content) }}
         style={{ columns: section.columns }}
         className="wysiwyg"
-      />
+      /> */}
+      <div style={{ columns: section.columns }} className="wysiwyg">
+        <SmartDiff
+          oldValue={sanitize(oldResume.sections.summary.content)} // Ensures clean input
+          newValue={sanitize(section.content)}
+        />
+      </div>
     </section>
   );
 };
@@ -376,12 +384,24 @@ const Skills = () => {
 
   return (
     <Section<Skill> section={section} levelKey="level" keywordsKey="keywords">
-      {(item) => (
-        <div>
-          <div className="font-bold">{item.name}</div>
-          <div>{item.description}</div>
-        </div>
-      )}
+      {(item) => {
+        const oldName = oldResume.sections.skills.items[item]?.name;
+        const oldDescription = oldResume.sections.skills.items[item]?.description;
+        // // console.log(oldName, oldDescription, '<---- old name')
+        // console.log(oldResume.sections.skills.items, item,'<----- skills')
+        return (
+          <div>
+            <div className="font-bold">
+              {/* {item.name} */}
+              <SmartDiff oldValue={oldName} newValue={item.name} />
+            </div>
+            <div>
+              {/* {item.description} */}
+              <SmartDiff oldValue={oldDescription} newValue={item.description} />
+            </div>
+          </div>
+        );
+      }}
     </Section>
   );
 };
