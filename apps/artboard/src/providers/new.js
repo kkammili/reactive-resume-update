@@ -81,7 +81,7 @@ export const updatedResume = {
         {
           id: "un8x72bh3q9y46wzub56zkws",
           visible: true,
-          company: "PomPom",
+          company: "Walmart",
           position: "SR Front End Developer",
           location: "",
           date: "2023-05-01 - undefined",
@@ -96,7 +96,7 @@ export const updatedResume = {
           id: "ps35njrcyafttf92z8lr2qp3",
           visible: true,
           company: "Lumen",
-          position: "SR JavaScript Full Stack Developer",
+          position: "Developer",
           location: "",
           date: "2021-10-01 - 2023-05-01",
           summary:
@@ -112,7 +112,7 @@ export const updatedResume = {
           company: "Verizon",
           position: "Full Stack Developer (React, Node)",
           location: "",
-          date: "2019-12-01 - 2021-09-01",
+          date: "2019-12-01 - 2021-09-02",
           summary:
             "Developed critical tools and applications for Verizon's network and customer relationship management. The VSON project focused on adjusting bandwidth and managing network infrastructure, while the CRM system streamlined lead tracking and customer interactions.",
           url: {

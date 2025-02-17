@@ -286,29 +286,50 @@ const Profiles = () => {
   );
 };
 
+type ExperienceItem = {
+  visible: boolean;
+  summary: string;
+  date: string;
+  id: string;
+  url: { label: string; href: string };
+  company: string;
+  position: string;
+  location: string;
+};
 const Experience = () => {
   const section = useArtboardStore((state) => state.resume.sections.experience);
+  const oldExperienceItems: ExperienceItem[] = get(oldResume, "sections.experience.items", []);
 
   return (
     <Section<Experience> section={section} urlKey="url" summaryKey="summary">
-      {(item) => (
-        <div className="flex items-start justify-between group-[.sidebar]:flex-col group-[.sidebar]:items-start">
-          <div className="text-left">
-            <LinkedEntity
-              name={item.company}
-              url={item.url}
-              separateLinks={section.separateLinks}
-              className="font-bold"
-            />
-            <div>{item.position}</div>
-          </div>
+      {(item) => {
+        // Match items by ID instead of index
+        const oldItem = oldExperienceItems.find((i) => i.id === item.id) ?? ({} as ExperienceItem);
+        return (
+          <div className="flex items-start justify-between group-[.sidebar]:flex-col group-[.sidebar]:items-start">
+            <div className="shrink-0 text-left">
+              <div>
+                <SmartDiff
+                  oldValue={sanitize(oldItem.company || "")}
+                  newValue={sanitize(item.company)}
+                  className="font-bold"
+                />
+              </div>
+              <div>
+                <SmartDiff
+                  oldValue={sanitize(oldItem.position || "")}
+                  newValue={sanitize(item.position)}
+                />
+              </div>
+            </div>
 
-          <div className="shrink-0 text-right">
-            <div className="font-bold">{item.date}</div>
-            <div>{item.location}</div>
+            <div className="shrink-0 text-right">
+              <SmartDiff oldValue={oldItem.date || ""} newValue={item.date} className="font-bold" />
+              <SmartDiff oldValue={oldItem.location || ""} newValue={item.location} />
+            </div>
           </div>
-        </div>
-      )}
+        );
+      }}
     </Section>
   );
 };
@@ -392,7 +413,7 @@ const Skills = () => {
   return (
     <Section<Skill> section={section} levelKey="level" keywordsKey="keywords">
       {(item) => {
-       const oldName = get(find(oldResume.sections.skills.items, { name: item.name }), "");
+        const oldName = get(find(oldResume.sections.skills.items, { name: item.name }), "name", "");
         return (
           <div>
             <div className="font-bold">
