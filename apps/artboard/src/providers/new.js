@@ -81,7 +81,7 @@ export const updatedResume = {
         {
           id: "un8x72bh3q9y46wzub56zkws",
           visible: true,
-          company: "Fidelity",
+          company: "PomPom",
           position: "SR Front End Developer",
           location: "",
           date: "2023-05-01 - undefined",
@@ -246,6 +246,8 @@ export const updatedResume = {
             "React.js (Redux, Redux Thunk, Redux Saga, Redux Toolkit, React Router), Vue.js (Vuex), Angular (NgRx, Signal Store), Nx Monorepo, JavaScript (ES6+), HTML5, CSS3",
             "HTML",
             "CSS",
+            "Radix UI",
+            "ShadCn",
             "Angular2+",
             "JavaScript",
           ],
@@ -278,8 +280,7 @@ export const updatedResume = {
           keywords: [
             "AWS (EC2, Lambda, Elastic Beanstalk, Amplify, S3, RDS, DynamoDB, VPC, Route 53, CloudFormation, CloudWatch), Docker, Jenkins, Shell Scripting, Vim, WebStorm",
             "Git",
-            "SVN",
-          ],
+           ],
         },
       ],
     },

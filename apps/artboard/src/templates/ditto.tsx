@@ -16,7 +16,9 @@ import type {
 } from "@reactive-resume/schema";
 import { Education, Experience, Volunteer } from "@reactive-resume/schema";
 import { cn, isEmptyString, isUrl, sanitize } from "@reactive-resume/utils";
+import find from "lodash.find";
 import get from "lodash.get";
+// import { find, get } from "lodash";
 import { Fragment } from "react";
 
 import { BrandIcon } from "../components/brand-icon";
@@ -117,7 +119,7 @@ const Summary = () => {
       /> */}
       <div style={{ columns: section.columns }} className="wysiwyg">
         <SmartDiff
-          oldValue={sanitize(oldResume.sections.summary.content)} // Ensures clean input
+          oldValue={sanitize(get(oldResume, "sections.summary.content", ""))} // Ensures clean input
           newValue={sanitize(section.content)}
         />
       </div>
@@ -222,7 +224,9 @@ const Section = <T,>({
             const level = (levelKey && get(item, levelKey, 0)) as number | undefined;
             const summary = (summaryKey && get(item, summaryKey, "")) as string | undefined;
             const keywords = (keywordsKey && get(item, keywordsKey, [])) as string[] | undefined;
-
+            const oldKeywords = keywordsKey
+              ? get(find(oldResume.sections.skills.items, { name: item.name }), keywordsKey, [])
+              : undefined;
             return (
               <div
                 key={item.id}
@@ -247,7 +251,11 @@ const Section = <T,>({
                 {level !== undefined && level > 0 && <Rating level={level} />}
 
                 {keywords !== undefined && keywords.length > 0 && (
-                  <p className="text-sm">{keywords.join(", ")}</p>
+                  <p className="text-sm">
+                    <SmartDiff newValue={keywords.join(", ")} oldValue={oldKeywords.join(", ")} />
+                  </p>
+
+                  // <p className="text-sm">{keywords.join(", ")}</p>
                 )}
 
                 <div className="absolute inset-y-0 left-0 border-l border-primary group-[.sidebar]:hidden" />
@@ -381,24 +389,17 @@ const Certifications = () => {
 
 const Skills = () => {
   const section = useArtboardStore((state) => state.resume.sections.skills);
-
   return (
     <Section<Skill> section={section} levelKey="level" keywordsKey="keywords">
       {(item) => {
-        const oldName = oldResume.sections.skills.items[item]?.name;
-        const oldDescription = oldResume.sections.skills.items[item]?.description;
-        // // console.log(oldName, oldDescription, '<---- old name')
-        // console.log(oldResume.sections.skills.items, item,'<----- skills')
+       const oldName = get(find(oldResume.sections.skills.items, { name: item.name }), "");
         return (
           <div>
             <div className="font-bold">
               {/* {item.name} */}
               <SmartDiff oldValue={oldName} newValue={item.name} />
             </div>
-            <div>
-              {/* {item.description} */}
-              <SmartDiff oldValue={oldDescription} newValue={item.description} />
-            </div>
+            <div>{item.description}</div>
           </div>
         );
       }}
