@@ -100,7 +100,7 @@ export const oldResume = {
           location: "",
           date: "2021-10-01 - 2023-05-01",
           summary:
-            "<p>Led the development of a self-service portal, Dycon, which allowed customers to manage connectivity options across multiple cloud providers—the project aimed to streamline the user experience and enhance global availability, resulting in significant cost savings.</p><p></p><p>hello hello</p>",
+            "<p>Led the development of a self-service portal, Dycon, which allowed customers to manage connectivity options across multiple cloud providers—the project aimed to streamline the user experience and enhance global availability, resulting in significant cost savings.</p><p></p>",
           url: {
             label: "",
             href: "",

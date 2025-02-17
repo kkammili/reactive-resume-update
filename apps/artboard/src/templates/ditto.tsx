@@ -18,12 +18,13 @@ import { Education, Experience, Volunteer } from "@reactive-resume/schema";
 import { cn, isEmptyString, isUrl, sanitize } from "@reactive-resume/utils";
 import find from "lodash.find";
 import get from "lodash.get";
+// ✅ Install: npm install node-html-parser
 // import { find, get } from "lodash";
 import { Fragment } from "react";
 
 import { BrandIcon } from "../components/brand-icon";
 import { Picture } from "../components/picture";
-import { SmartDiff } from "../components/smart-diff";
+import { highlightDiffInHtml, SmartDiff } from "../components/smart-diff";
 import { oldResume } from "../providers/old.js";
 import { useArtboardStore } from "../store/artboard";
 import type { TemplateProps } from "../types/template";
@@ -224,6 +225,10 @@ const Section = <T,>({
             const level = (levelKey && get(item, levelKey, 0)) as number | undefined;
             const summary = (summaryKey && get(item, summaryKey, "")) as string | undefined;
             const keywords = (keywordsKey && get(item, keywordsKey, [])) as string[] | undefined;
+            const oldItem = find(oldResume.sections.experience.items, { id: item.id }) || {};
+            const oldSummary = oldItem.summary || "";
+            // ✅ Apply word-level diff while keeping original HTML structure
+            const highlightedSummary = highlightDiffInHtml(oldSummary, summary);
             const oldKeywords = keywordsKey
               ? get(find(oldResume.sections.skills.items, { name: item.name }), keywordsKey, [])
               : undefined;
@@ -241,15 +246,18 @@ const Section = <T,>({
                   <div className="absolute inset-y-0 -left-px border-l-4 border-primary group-[.sidebar]:hidden" />
                 </div>
 
+                {/* ✅ Render the diffed summary while preserving the correct formatting */}
                 {summary !== undefined && !isEmptyString(summary) && (
                   <div
-                    dangerouslySetInnerHTML={{ __html: sanitize(summary) }}
+                    dangerouslySetInnerHTML={{ __html: highlightedSummary }}
                     className="wysiwyg"
                   />
                 )}
 
+                {/* ✅ Show Rating if Level Exists */}
                 {level !== undefined && level > 0 && <Rating level={level} />}
 
+                {/* ✅ SmartDiff for Keywords */}
                 {keywords !== undefined && keywords.length > 0 && (
                   <p className="text-sm">
                     <SmartDiff newValue={keywords.join(", ")} oldValue={oldKeywords.join(", ")} />

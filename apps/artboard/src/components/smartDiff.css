@@ -12,10 +12,13 @@ s {
 }
 
 .diff-removed {
-  opacity: 0.6;
-  filter: grayscale(1);
+  background: #fee2e2; /* Red 100 */
+  border-bottom: 2px solid #ef4444; /* Red 500 */
+  text-decoration: none;
 }
 
 .diff-added {
-  background: #dcfce7;
+  background: #dcfce7; /* Green 100 */
+  border-bottom: 2px solid #22c55e; /* Green 500 */
+  text-decoration: none;
 }

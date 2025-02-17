@@ -86,7 +86,7 @@ export const updatedResume = {
           location: "",
           date: "2023-05-01 - undefined",
           summary:
-            "<p>Involved in modernizing and enhancing legacy systems, including PSW and NBDB, by migrating them to Edithub using newer technologies like Angular 18. Played a key role in addressing production issues and developing new features to improve user experience.</p><ul><li><p>This is my first point</p></li><li><p>This is my second point</p></li><li><p>This is my third point.</p></li></ul>",
+            "<p>Involved in modernizing and enhancing legacy systems,Added this item including PSW and NBDB, by migrating them to Edithub using like Angular 18. Played a key role in addressing production issues and developing new features to improve user experience.</p><ul><li><p>This is my first point</p></li><li><p>This is my second point</p></li><li><p>This is my third point.</p></li></ul>",
           url: {
             label: "",
             href: "",
@@ -100,7 +100,7 @@ export const updatedResume = {
           location: "",
           date: "2021-10-01 - 2023-05-01",
           summary:
-            "<p>Led the development of a self-service portal, Dycon, which allowed customers to manage connectivity options across multiple cloud providers—the project aimed to streamline the user experience and enhance global availability, resulting in significant cost savings.</p><p></p><p>hello hello</p>",
+            "<p>Led the development of a self-service portal, Dycon, which allowed customers to manage connectivity options across multiple cloud providers—the project experience and enhance global availability, resulting in significant cost savings.</p><p></p><p>hello hello</p>",
           url: {
             label: "",
             href: "",
@@ -142,7 +142,7 @@ export const updatedResume = {
           location: "",
           date: "2017-12-01 - 2018-05-01",
           summary:
-            "Developed tools to improve authentication processes and security at Capital One. The project included implementing multi-factor authentication, document verification, and fraud detection tools to secure customer interactions.",
+            "Developed tools to improve authentication processes and security at Capital One. The project included implementing multi-factor authentication, document verification, and fraud detection tools to secure customer, boom boom",
           url: {
             label: "",
             href: "",
