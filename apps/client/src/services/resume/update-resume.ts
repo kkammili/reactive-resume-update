@@ -6,11 +6,13 @@ import { axios } from "@/client/libs/axios";
 export const updateRsmKeywords = async ({
   jobDesc,
   data,
+  tempType,
 }: {
   jobDesc: string;
   data: ResumeDto;
+  tempType: string;
 }): Promise<ResumeDto> => {
-  const response = await axios.post<ResumeDto>("/resume/updateResume", { data, jobDesc });
+  const response = await axios.post<ResumeDto>("/resume/updateResume", { data, jobDesc, tempType });
   return response.data;
 };
 
@@ -19,7 +21,7 @@ export const useUpdateResumeKeywords = () => {
     error,
     isPending: loading,
     mutateAsync: updateRsmKeywordsFn,
-  } = useMutation<ResumeDto, Error, { jobDesc: string; data: ResumeDto }>({
+  } = useMutation<ResumeDto, Error, { jobDesc: string; data: ResumeDto; tempType: string }>({
     mutationFn: updateRsmKeywords,
     onSuccess: (data) => {
       // open modal to show differences between old and new resume.

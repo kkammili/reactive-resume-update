@@ -1,3 +1,4 @@
+/* eslint-disable lingui/no-unlocalized-strings */
 import { zodResolver } from "@hookform/resolvers/zod";
 import { t } from "@lingui/macro";
 import { CaretDown, Flask, MagicWand, Plus } from "@phosphor-icons/react";
@@ -32,15 +33,27 @@ import {
   FormLabel,
   FormMessage,
   Input,
+  Label,
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
   Tooltip,
 } from "@reactive-resume/ui";
 import { cn, generateRandomName } from "@reactive-resume/utils";
 import slugify from "@sindresorhus/slugify";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-import { useCreateResume, useDeleteResume, useUpdateResume, useUpdateResumeKeywords } from "@/client/services/resume";
+import {
+  useCreateResume,
+  useDeleteResume,
+  useUpdateResume,
+  useUpdateResumeKeywords,
+} from "@/client/services/resume";
 import { useImportResume } from "@/client/services/resume/import";
 import { useDialog } from "@/client/stores/dialog";
 
@@ -69,6 +82,8 @@ export const ResumeDialog = () => {
     resolver: zodResolver(formSchema),
     defaultValues: { title: "", slug: "" },
   });
+
+  const [selectValue, setSelectValue] = useState("Ditto-Update");
 
   useEffect(() => {
     if (isOpen) onReset();
@@ -146,6 +161,7 @@ export const ResumeDialog = () => {
     await updateRsmKeywords({
       jobDesc: form.getValues().title,
       data: payload.item,
+      tempType: selectValue,
     });
   };
 
@@ -181,29 +197,51 @@ export const ResumeDialog = () => {
         <AlertDialogContent>
           <Form {...form}>
             <form>
-              <AlertDialogHeader>
+              <AlertDialogHeader className="m-2">
                 <AlertDialogTitle>{t`Update resume with necessary keywords for job hunt.`}</AlertDialogTitle>
                 <AlertDialogDescription>
                   {t`Paste job description below to update your resume summary, technical skills and resume points.`}
                 </AlertDialogDescription>
               </AlertDialogHeader>
 
-              <FormField
-                name="title"
-                control={form.control}
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>{t`Job Description:`}</FormLabel>
-                    <FormControl>
-                      <textarea {...field} className="w-full flex-1" />
-                    </FormControl>
-                    <FormDescription>
-                      {t`Tip: Enter job description here to update resume with keywords.`}
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+              <div className="m-2">
+                <Label>{t`Choose a Resume Template:`}</Label>
+                <Select
+                  value={selectValue}
+                  name="select"
+                  onValueChange={(value) => {
+                    setSelectValue(value);
+                  }}
+                >
+                  <SelectTrigger />
+                  <SelectContent>
+                    <SelectGroup>
+                      <SelectLabel>{t`Choose a Resume Template:`}</SelectLabel>
+                      <SelectItem value="Ditto-Update">{t`Ditto-Update`}</SelectItem>
+                      {/* Additional SelectItem components */}
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="m-2">
+                <FormField
+                  name="title"
+                  control={form.control}
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>{t`Job Description:`}</FormLabel>
+                      <FormControl>
+                        <textarea {...field} className="w-full flex-1" />
+                      </FormControl>
+                      <FormDescription>
+                        {t`Tip: Enter job description here to update resume with keywords.`}
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
 
               <DialogFooter>
                 <div className="flex items-center">
