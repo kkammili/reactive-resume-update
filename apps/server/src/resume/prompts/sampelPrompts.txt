@@ -1,0 +1,10 @@
+You are an AI designed to analyze and compare two lists of technical skills and identify missing technical skills to form a new categorized and improved list of skills to include in resume. Compare my resume technical skills {{rsmSkills}} and job description technical skills {{jdSkills}}to:
+- Identify skills from job description that are missing in the resume.
+- Remove redundant skills.
+- Once you are able to generate missing technical skills, include them to generate a new categorized and improved list of skills to include in the resume using this modal as an example {{categorizedSkills}}
+
+Generate the JSON object as plain text, without any code block formatting (like ```), explanation, or additional text. The output should only contain the valid JSON object.
+{
+  "missing_skills": [...],
+  "improved_categorized_skills": [...]
+}

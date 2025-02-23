@@ -1,0 +1,5 @@
+{
+    "prompt": "You are an AI specializing in resume optimization. Given an old professional summary, a job description, and a company name, rewrite the professional summary to make it more relevant for the job while keeping the user's core experience intact.\n\n### Old Professional Summary:\n{{oldSummary}}\n\n### Job Description:\n{{jobDescription}}\n\n### Company Name:\n{{companyName}}\n\n### Instructions:\n- Ensure the new summary is **concise, engaging, and ATS-friendly**.\n- Highlight **key skills and responsibilities** that align with the job description.\n- Maintain the **essence of the user's experience**, but make it **more appealing to recruiters**.\n- **Always retain awards, recognitions, and quantifiable achievements** (e.g., *Increased efficiency by 30%*, *Awarded Most Valuable Associate in 2024*).\n- Include the company name naturally in the summary (e.g., *Excited to bring my expertise to {{companyName}}...*).\n\nReturn a JSON object with the improved summary in this format:\n\n{\n  \"improved_professional_summary\": \"string\"\n}"
+  }
+  
+  

@@ -75,32 +75,73 @@ export class ResumeController {
 
   @Post("updateResume")
   @UseGuards(TwoFactorGuard)
-  async updateResume(@Body() updateResumeDto: unknown) {
-    await new Promise((resolve) => setTimeout(resolve, 30_000));
+  async updateResume(
+    @Body() updateResumeDto: { data: ResumeDto; jobDesc: string; tempType: string },
+  ) {
+    const { data: resumeData, jobDesc, tempType } = updateResumeDto;
+    // await new Promise((resolve) => setTimeout(resolve, 30_000));
 
-    // Return sample resume data
-    return {
-      id: "550e8400-e29b-41d4-a716-446655440000",
-      title: "Senior Software Engineer",
-      slug: "senior-software-engineer",
-      data: {
-        basics: {
-          name: "John Doe",
-          email: "john@example.com",
-          phone: "(555) 123-4567",
-        },
-        work: [
-          {
-            company: "Tech Corp",
-            position: "Software Engineer",
-            startDate: "2018-01-01",
-          },
-        ],
-      },
-      visibility: "public",
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
+    // Step 1: Parse Resume Data and Job Description working
+    // const requiredSkills = extractJobDescSkills(jobDesc);
+
+    const requiredSkills = {
+      company_name: "JPMorgan Chase",
+      company_details:
+        "As a Lead Software Engineer at JPMorgan Chase within the Corporate Technology, you are an integral part of an agile team that works to enhance, build, and deliver trusted market-leading technology products in a secure, stable, and scalable way.",
+      job_desc_tech_skills: [
+        "data structures",
+        "algorithms",
+        "software design",
+        "responsive design",
+        "JavaScript frameworks",
+        "React",
+        "Angular",
+        "Ember",
+        "Node.js",
+        "AJAX",
+        "HTML5",
+        "CSS3",
+        "TypeScript",
+        "object-oriented JavaScript",
+        "design patterns",
+        "continuous integration",
+        "deployment architecture",
+        "Webpack",
+        "Superagent",
+        "Babel",
+        "Web Vitals",
+        "Redux Toolkit",
+        "Atomic CSS",
+        "Storybook",
+        "JSON",
+        "REST APIs",
+        "Web application CI/CD",
+        "web application performance",
+        "debugging",
+      ],
     };
+
+    return requiredSkills;
+
+    // const resumeSkills = resumeData.data.sections.skills.items.map((skill) => skill.name);
+
+    // Step 2: Identify Missing Skills
+    //   const missingSkills = requiredSkills.filter(skill => !resumeSkills.includes(skill));
+
+    //   // Step 3: Generate New Resume Points Using AI (in parallel)
+    //   const newResumePoints = await Promise.all(
+    //     missingSkills.map(skill => generateResumePoint(skill))
+    //   );
+
+    //   // Step 4: Update the Resume JSON
+    //   const updatedResumeData = addResumePoints(resumeData, newResumePoints);
+
+    //   // Step 5: Return Updated JSON
+    //   res.status(200).json(updatedResumeData);
+    // } catch (error) {
+    //   console.error('Error processing request:', error);
+    //   res.status(500).json({ message: 'Internal server error', error: error.message });
+    // }
   }
 
   @Get()

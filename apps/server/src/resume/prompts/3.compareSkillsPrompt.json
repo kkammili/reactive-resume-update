@@ -1,0 +1,6 @@
+{
+    "prompt": "You are an AI that classifies technology skills into categories for resume structuring. Given a list of missing technical skills, categorize each skill into one of these categories:\n\n- frontendTechnologies\n- frontendTesting\n- backendTechnologies\n- devOpsAndTools\n- databases\n- cloudTechnologies\n- infrastructure\n- miscellaneous (if you cannot categorize it)\n\nHere are the missing skills:\n{{missingSkills}}\n\nReturn a JSON object like this:\n{\n  \"missing_skills\": [...],\n  \"categorized_skills\": {\n    \"frontendTechnologies\": [...],\n    \"frontendTesting\": [...],\n    \"backendTechnologies\": [...],\n    \"devOpsAndTools\": [...],\n    \"databases\": [...],\n    \"cloudTechnologies\": [...],\n    \"infrastructure\": [...],\n    \"miscellaneous\": [...]\n  }\n}"
+  }
+  
+  
+  
