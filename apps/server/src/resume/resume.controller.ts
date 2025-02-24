@@ -31,6 +31,7 @@ import { TwoFactorGuard } from "../auth/guards/two-factor.guard";
 import { Resume } from "./decorators/resume.decorator";
 import { ResumeGuard } from "./guards/resume.guard";
 import { ResumeService } from "./resume.service";
+import { addingMissingSkills, generateProfessionalSummary, generateResumePoints } from "./utils";
 
 @ApiTags("Resume")
 @Controller("resume")
@@ -121,17 +122,39 @@ export class ResumeController {
       ],
     };
 
-    return requiredSkills;
-
-    // const resumeSkills = resumeData.data.sections.skills.items.map((skill) => skill.name);
+    const resumeSkills = resumeData.data.sections.skills.items.map((skill) => skill.name);
 
     // Step 2: Identify Missing Skills
-    //   const missingSkills = requiredSkills.filter(skill => !resumeSkills.includes(skill));
-
+    // consider finding and adding resume point keywords to resume skills
+    const missingSkills = requiredSkills.job_desc_tech_skills.filter((jobSkill) => {
+      // Check if the job skill is not directly present in the resume skills
+      if (!resumeSkills.includes(jobSkill)) {
+        // Check if any resume skill starts with the job skill (e.g., "HTML5" starts with "HTML")
+        const hasNewerVersion = resumeSkills.some((resumeSkill) =>
+          resumeSkill.startsWith(jobSkill),
+        );
+        // Include the job skill in missing skills only if no newer version exists in the resume
+        return !hasNewerVersion;
+      }
+      return false; // Skill is present in the resume, so it's not missing
+    });
     //   // Step 3: Generate New Resume Points Using AI (in parallel)
-    //   const newResumePoints = await Promise.all(
-    //     missingSkills.map(skill => generateResumePoint(skill))
-    //   );
+    const [newSkills, newResumePoints, newProfessionalSummary] = await Promise.all([
+      addingMissingSkills(resumeData.data.sections.skills.items, missingSkills),
+      generateResumePoints(missingSkills),
+      generateProfessionalSummary(
+        resumeData.data.sections.summary.content,
+        jobDesc,
+        requiredSkills.company_name,
+      ),
+    ]);
+
+    return {
+      missingSkills,
+      newSkills,
+      newResumePoints,
+      newProfessionalSummary,
+    };
 
     //   // Step 4: Update the Resume JSON
     //   const updatedResumeData = addResumePoints(resumeData, newResumePoints);
