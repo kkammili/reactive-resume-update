@@ -1,7 +1,13 @@
+/* eslint-disable @typescript-eslint/restrict-plus-operands */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { OpenAI } from "openai";
 
 const openai = new OpenAI({ apiKey: process.env.AI_KEY });
+
+type JobDescription = {
+  companyName: string;
+  jobDescTechSkills: string[];
+};
 
 /**
  * Extracts company name, company details, and technical skills from a job description.
@@ -13,7 +19,7 @@ const openai = new OpenAI({ apiKey: process.env.AI_KEY });
  *   job_desc_tech_skills: ["string"]
  * }
  */
-export const extractJobDescSkills = async (jobDescription: string) => {
+export const extractJobDescSkills = async (jobDescription: string): Promise<JobDescription> => {
   const prompt = `Extract the following details from the given job description:
 - Company name
 - Technical skills
@@ -23,8 +29,8 @@ Make sure technical skills are the necessary skills needed for the programmer be
 Generate the JSON object as plain text, without any code block formatting (like \`\`\`), explanation, or additional text. The output should only contain the valid JSON object in the following format:
 
 {
-  "company_name": "string",
-  "job_desc_tech_skills": ["string"]
+  "companyName": "string",
+  "jobDescTechSkills": ["string"]
 }
 
 Job Description:
@@ -186,6 +192,31 @@ export const generateProfessionalSummary = async (
   } catch (error) {
     throw new Error(error.message);
   }
+};
+
+const generateListHTML = (points: string[]) => {
+  if (points.length === 0) return "";
+  const listItems = points.map((point) => `<li>${point}</li>`).join("");
+  return `<ul>${listItems}</ul>`;
+};
+
+export const addResumePointsToExperience = (resumePoints: string[], experience: any) => {
+  const half = Math.ceil(resumePoints.length / 2);
+  const firstHalfPoints = resumePoints.slice(0, half);
+  const secondHalfPoints = resumePoints.slice(half);
+
+  const firstListHTML = generateListHTML(firstHalfPoints);
+  const secondListHTML = generateListHTML(secondHalfPoints);
+
+  // If exp is empty then please handle the edge case.
+  if (experience.items.length > 0) {
+    experience.items[0].summary += firstListHTML;
+  }
+  if (experience.items.length > 1) {
+    experience.items[1].summary += secondListHTML;
+  }
+
+  return experience;
 };
 
 export const promptUtil = async (prompt: string) => {

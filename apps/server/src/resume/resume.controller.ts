@@ -31,7 +31,13 @@ import { TwoFactorGuard } from "../auth/guards/two-factor.guard";
 import { Resume } from "./decorators/resume.decorator";
 import { ResumeGuard } from "./guards/resume.guard";
 import { ResumeService } from "./resume.service";
-import { addingMissingSkills, generateProfessionalSummary, generateResumePoints } from "./utils";
+import {
+  addingMissingSkills,
+  addResumePointsToExperience,
+  extractJobDescSkills,
+  generateProfessionalSummary,
+  generateResumePoints,
+} from "./utils";
 
 @ApiTags("Resume")
 @Controller("resume")
@@ -79,92 +85,70 @@ export class ResumeController {
   async updateResume(
     @Body() updateResumeDto: { data: ResumeDto; jobDesc: string; tempType: string },
   ) {
-    const { data: resumeData, jobDesc, tempType } = updateResumeDto;
-    // await new Promise((resolve) => setTimeout(resolve, 30_000));
+    try {
+      const { data: resumeData, jobDesc, tempType } = updateResumeDto;
+      // await new Promise((resolve) => setTimeout(resolve, 30_000));
 
-    // Step 1: Parse Resume Data and Job Description working
-    // const requiredSkills = extractJobDescSkills(jobDesc);
+      // Step 1: Parse Resume Data and Job Description working
+      const requiredSkills = await extractJobDescSkills(jobDesc);
 
-    const requiredSkills = {
-      company_name: "JPMorgan Chase",
-      company_details:
-        "As a Lead Software Engineer at JPMorgan Chase within the Corporate Technology, you are an integral part of an agile team that works to enhance, build, and deliver trusted market-leading technology products in a secure, stable, and scalable way.",
-      job_desc_tech_skills: [
-        "data structures",
-        "algorithms",
-        "software design",
-        "responsive design",
-        "JavaScript frameworks",
-        "React",
-        "Angular",
-        "Ember",
-        "Node.js",
-        "AJAX",
-        "HTML5",
-        "CSS3",
-        "TypeScript",
-        "object-oriented JavaScript",
-        "design patterns",
-        "continuous integration",
-        "deployment architecture",
-        "Webpack",
-        "Superagent",
-        "Babel",
-        "Web Vitals",
-        "Redux Toolkit",
-        "Atomic CSS",
-        "Storybook",
-        "JSON",
-        "REST APIs",
-        "Web application CI/CD",
-        "web application performance",
-        "debugging",
-      ],
-    };
+      const resumeSkills = resumeData.data.sections.skills.items.map((skill) => skill.name);
 
-    const resumeSkills = resumeData.data.sections.skills.items.map((skill) => skill.name);
+      // Step 2: Identify Missing Skills
+      // consider finding and adding resume point keywords to resume skills
+      const missingSkills = requiredSkills.jobDescTechSkills.filter((jobSkill: string) => {
+        // Check if the job skill is not directly present in the resume skills
+        if (!resumeSkills.includes(jobSkill)) {
+          // Check if any resume skill starts with the job skill (e.g., "HTML5" starts with "HTML")
+          const hasNewerVersion = resumeSkills.some((resumeSkill) =>
+            resumeSkill.startsWith(jobSkill),
+          );
+          // Include the job skill in missing skills only if no newer version exists in the resume
+          return !hasNewerVersion;
+        }
+        return false; // Skill is present in the resume, so it's not missing
+      });
 
-    // Step 2: Identify Missing Skills
-    // consider finding and adding resume point keywords to resume skills
-    const missingSkills = requiredSkills.job_desc_tech_skills.filter((jobSkill) => {
-      // Check if the job skill is not directly present in the resume skills
-      if (!resumeSkills.includes(jobSkill)) {
-        // Check if any resume skill starts with the job skill (e.g., "HTML5" starts with "HTML")
-        const hasNewerVersion = resumeSkills.some((resumeSkill) =>
-          resumeSkill.startsWith(jobSkill),
-        );
-        // Include the job skill in missing skills only if no newer version exists in the resume
-        return !hasNewerVersion;
-      }
-      return false; // Skill is present in the resume, so it's not missing
-    });
-    //   // Step 3: Generate New Resume Points Using AI (in parallel)
-    const [newSkills, newResumePoints, newProfessionalSummary] = await Promise.all([
-      addingMissingSkills(resumeData.data.sections.skills.items, missingSkills),
-      generateResumePoints(missingSkills),
-      generateProfessionalSummary(
-        resumeData.data.sections.summary.content,
-        jobDesc,
-        requiredSkills.company_name,
-      ),
-    ]);
+      // Step 3: Using AI (in parallel) to generate everything
+      const [newSkills, newResumePoints, newProfessionalSummary] = await Promise.all([
+        addingMissingSkills(resumeData.data.sections.skills.items, missingSkills),
+        generateResumePoints(missingSkills),
+        generateProfessionalSummary(
+          resumeData.data.sections.summary.content,
+          jobDesc,
+          requiredSkills.companyName,
+        ),
+      ]);
 
-    return {
-      missingSkills,
-      newSkills,
-      newResumePoints,
-      newProfessionalSummary,
-    };
+      // Step 4: Updating JSON Resume
+      // adding new summary
+      resumeData.data.sections.summary.content = newProfessionalSummary;
 
-    //   // Step 4: Update the Resume JSON
-    //   const updatedResumeData = addResumePoints(resumeData, newResumePoints);
+      // adding newSkills
+      resumeData.data.sections.skills.items = newSkills.items;
 
-    //   // Step 5: Return Updated JSON
-    //   res.status(200).json(updatedResumeData);
-    // } catch (error) {
-    //   console.error('Error processing request:', error);
-    //   res.status(500).json({ message: 'Internal server error', error: error.message });
-    // }
+      // adding new resume points
+      const newExp = addResumePointsToExperience(
+        newResumePoints,
+        resumeData.data.sections.experience,
+      );
+
+      // console.log(newExp, '<----- check new exp')
+      resumeData.data.sections.experience = newExp;
+
+      // adding missing skills
+      resumeData.missingSkills = missingSkills;
+
+      // updating template
+      resumeData.data.metadata.template = tempType;
+
+      // Step 5: Return Updated JSON
+      return resumeData;
+    } catch (error) {
+      // console.error("Error processing request:", error);
+      throw new Error(error.message);
+      // res.status(500).json({ message: 'Internal server error', error: error.message });
+    }
   }
 
   @Get()
