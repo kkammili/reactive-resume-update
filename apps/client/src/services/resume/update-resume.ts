@@ -24,6 +24,7 @@ export const useUpdateResumeKeywords = () => {
   } = useMutation<ResumeDto, Error, { jobDesc: string; data: ResumeDto; tempType: string }>({
     mutationFn: updateRsmKeywords,
     onSuccess: (data) => {
+      return data;
       // open modal to show differences between old and new resume.
     },
   });

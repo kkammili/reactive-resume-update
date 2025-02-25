@@ -2,6 +2,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { t } from "@lingui/macro";
 import { CaretDown, Flask, MagicWand, Plus } from "@phosphor-icons/react";
+import { SelectValue } from "@radix-ui/react-select";
 import type { ResumeDto } from "@reactive-resume/dto";
 import { createResumeSchema } from "@reactive-resume/dto";
 import { idSchema, sampleResume } from "@reactive-resume/schema";
@@ -38,7 +39,6 @@ import {
   SelectContent,
   SelectGroup,
   SelectItem,
-  SelectLabel,
   SelectTrigger,
   Tooltip,
 } from "@reactive-resume/ui";
@@ -76,7 +76,8 @@ export const ResumeDialog = () => {
   const { updateRsmKeywords, loading: updateRsmKeywordsLoading } = useUpdateResumeKeywords();
   const { importResume: duplicateResume, loading: duplicateLoading } = useImportResume();
 
-  const loading = createLoading || updateLoading || deleteLoading || duplicateLoading;
+  const loading =
+    createLoading || updateLoading || deleteLoading || duplicateLoading || updateRsmKeywordsLoading;
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -158,7 +159,8 @@ export const ResumeDialog = () => {
 
   const onResumeUpdate = async () => {
     if (!payload.item?.id) return;
-    await updateRsmKeywords({
+    if (!form.getValues().title) return;
+    const res = await updateRsmKeywords({
       jobDesc: form.getValues().title,
       data: payload.item,
       tempType: selectValue,
@@ -213,11 +215,14 @@ export const ResumeDialog = () => {
                     setSelectValue(value);
                   }}
                 >
-                  <SelectTrigger />
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select a template" /> {/* Add this line */}
+                  </SelectTrigger>
                   <SelectContent>
                     <SelectGroup>
-                      <SelectLabel>{t`Choose a Resume Template:`}</SelectLabel>
                       <SelectItem value="Ditto-Update">{t`Ditto-Update`}</SelectItem>
+                      <SelectItem disabled value="Pikachu-Update">{t`Pikachu-Update`}</SelectItem>
+
                       {/* Additional SelectItem components */}
                     </SelectGroup>
                   </SelectContent>
@@ -244,16 +249,16 @@ export const ResumeDialog = () => {
               </div>
 
               <DialogFooter>
-                <div className="flex items-center">
-                  <Button
-                    type="button"
-                    disabled={loading}
-                    className={cn(isCreate && "rounded-r-none")}
-                    onClick={() => onResumeUpdate()}
-                  >
-                    {t`Update Resume`}
-                  </Button>
-                </div>
+                <AlertDialogCancel>{t`Cancel`}</AlertDialogCancel>
+
+                <Button
+                  type="button"
+                  disabled={loading}
+                  className={cn(isCreate && "rounded-r-none")}
+                  onClick={() => onResumeUpdate()}
+                >
+                  {t`Update Resume`}
+                </Button>
               </DialogFooter>
             </form>
           </Form>
