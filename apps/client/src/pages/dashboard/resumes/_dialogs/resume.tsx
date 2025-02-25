@@ -84,7 +84,7 @@ export const ResumeDialog = () => {
     defaultValues: { title: "", slug: "" },
   });
 
-  const [selectValue, setSelectValue] = useState("Ditto-Update");
+  const [selectValue, setSelectValue] = useState("Ditto");
 
   useEffect(() => {
     if (isOpen) onReset();
@@ -220,7 +220,7 @@ export const ResumeDialog = () => {
                   </SelectTrigger>
                   <SelectContent>
                     <SelectGroup>
-                      <SelectItem value="Ditto-Update">{t`Ditto-Update`}</SelectItem>
+                      <SelectItem value="Ditto">{t`Ditto`}</SelectItem>
                       <SelectItem disabled value="Pikachu-Update">{t`Pikachu-Update`}</SelectItem>
 
                       {/* Additional SelectItem components */}

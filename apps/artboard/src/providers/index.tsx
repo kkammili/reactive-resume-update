@@ -4,12 +4,13 @@ import { Outlet } from "react-router";
 
 import { helmetContext } from "../constants/helmet";
 import { useArtboardStore } from "../store/artboard";
-import { updatedResume } from './new.js';
-import { oldResume } from './old.js';
+// import { updatedResume } from './new.js';
+// import { oldResume } from './old.js';
 
 export const Providers = () => {
   const resume = useArtboardStore((state) => state.resume);
   const setResume = useArtboardStore((state) => state.setResume);
+  const setOldResume = useArtboardStore((state) => state.setOldResume);
 
   useEffect(() => {
     const handleMessage = (event: MessageEvent) => {
@@ -25,12 +26,12 @@ export const Providers = () => {
   }, []);
 
   useEffect(() => {
-    // const resumeData = window.localStorage.getItem("resume");
-    // console.log(updatedResume, JSON.parse(resumeData), '<----- check these')
+    const resumeData = window.localStorage.getItem("resume");
+    const oldResumeData = window.localStorage.getItem("oldResume");
 
-    // if (resumeData) setResume(JSON.parse(resumeData));
-    setResume(updatedResume);
-  }, []);
+    if (resumeData) setResume(JSON.parse(resumeData));
+    if (oldResumeData) setOldResume(JSON.parse(oldResumeData));
+  }, [window.localStorage.getItem("resume"), window.localStorage.getItem("oldResume")]);
 
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (!resume) return null;
