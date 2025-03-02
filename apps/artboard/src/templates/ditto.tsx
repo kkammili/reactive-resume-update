@@ -457,7 +457,7 @@ const Certifications = () => {
 
 const Skills = () => {
   const section = useArtboardStore((state) => state.resume.sections.skills);
-  const oldResume = useArtboardStore((store) => store.oldResume);
+  const oldResume = useArtboardStore((state) => state.oldResume);
   return (
     <Section<Skill> section={section} levelKey="level" keywordsKey="keywords">
       {(item) => {
@@ -691,7 +691,6 @@ const mapSectionToComponent = (section: SectionKey) => {
 
 export const Ditto = ({ columns, isFirstPage = false }: TemplateProps) => {
   const [main, sidebar] = columns;
-
   return (
     <div>
       {isFirstPage && (

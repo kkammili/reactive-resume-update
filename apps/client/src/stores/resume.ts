@@ -16,9 +16,13 @@ import { debouncedUpdateResume } from "../services/resume";
 
 type ResumeStore = {
   resume: ResumeDto;
+  oldResume: ResumeDto;
 
   // Actions
   setValue: (path: string, value: unknown) => void;
+
+  // set Resume
+  setOldResume: (resume: ResumeDto) => void;
 
   // Custom Section Actions
   addSection: () => void;
@@ -29,6 +33,7 @@ export const useResumeStore = create<ResumeStore>()(
   temporal(
     immer((set) => ({
       resume: {} as ResumeDto,
+      oldResume: {} as ResumeDto,
       setValue: (path, value) => {
         set((state) => {
           if (path === "visibility") {
@@ -38,6 +43,11 @@ export const useResumeStore = create<ResumeStore>()(
           }
 
           void debouncedUpdateResume(JSON.parse(JSON.stringify(state.resume)));
+        });
+      },
+      setOldResume: (resume) => {
+        set((state) => {
+          state.oldResume = resume;
         });
       },
       addSection: () => {

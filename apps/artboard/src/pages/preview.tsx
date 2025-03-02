@@ -3,6 +3,7 @@ import type { Template } from "@reactive-resume/utils";
 import { useMemo } from "react";
 
 import { Page } from "../components/page";
+import type { ArtboardStore } from "../store/artboard";
 import { useArtboardStore } from "../store/artboard";
 import { getTemplate } from "../templates";
 
@@ -22,3 +23,6 @@ export const PreviewLayout = () => {
     </>
   );
 };
+function useEffect(arg0: () => void, arg1: ArtboardStore[]) {
+  throw new Error("Function not implemented.");
+}

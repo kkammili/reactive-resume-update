@@ -20,7 +20,6 @@ export const BuilderLayout = () => {
   const template = useArtboardStore((state) => state.resume.metadata.template as Template);
 
   const Template = useMemo(() => getTemplate(template), [template]);
-
   useEffect(() => {
     const handleMessage = (event: MessageEvent) => {
       if (event.origin !== window.location.origin) return;

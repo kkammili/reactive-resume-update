@@ -46,6 +46,7 @@ import { cn, generateRandomName } from "@reactive-resume/utils";
 import slugify from "@sindresorhus/slugify";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router";
 import { z } from "zod";
 
 import {
@@ -56,6 +57,7 @@ import {
 } from "@/client/services/resume";
 import { useImportResume } from "@/client/services/resume/import";
 import { useDialog } from "@/client/stores/dialog";
+import { useResumeStore } from "@/client/stores/resume";
 
 const formSchema = createResumeSchema.extend({ id: idSchema.optional(), slug: z.string() });
 
@@ -63,6 +65,10 @@ type FormValues = z.infer<typeof formSchema>;
 
 export const ResumeDialog = () => {
   const { isOpen, mode, payload, close } = useDialog<ResumeDto>("resume");
+
+  // const oldResume = useResumeStore((state) => state);
+  const navigate = useNavigate();
+  const setOldResume = useResumeStore((state)=> state.setOldResume)
 
   const isCreate = mode === "create";
   const isUpdate = mode === "update";
@@ -165,6 +171,23 @@ export const ResumeDialog = () => {
       data: payload.item,
       tempType: selectValue,
     });
+
+    // Get current state BEFORE update
+    // const oldResume = useResumeStore.getState().resume;
+
+    // Update the store
+    // useResumeStore.setOldResume({ resume: res });
+    setOldResume(res);
+
+    // Get updated state AFTER update
+    // const newResume = useResumeStore.getState().resume;
+    close();
+    // console.log(oldResume,  '<----- resume prior')
+    // localStorage.setItem("oldResume", JSON.stringify(oldResume));
+    // console.log(res, "<----- check res here");
+    // useResumeStore.setState({ resume: res });
+    // console.log(oldResume, '<------ resume after')
+    void navigate(`/builder/${res.id}`);
   };
 
   if (isDelete) {

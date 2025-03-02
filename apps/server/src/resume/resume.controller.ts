@@ -133,7 +133,6 @@ export class ResumeController {
         resumeData.data.sections.experience,
       );
 
-      // console.log(newExp, '<----- check new exp')
       resumeData.data.sections.experience = newExp;
 
       // adding missing skills
