@@ -122,24 +122,29 @@ export const generateResumePoints = async (missingSkills: string[]) => {
   const prompt =
     `Generate professional resume bullet points for these skills: ${JSON.stringify(missingSkills)}\n\n` +
     `STRICT RULES:\n` +
-    `1. For each skill in skills given above generate 2 UNIQUE points using different action verbs\n` +
+    `1. For each skill, generate 2 UNIQUE points with different action verbs\n` +
     `2. Include measurable impact where possible\n` +
-    `3. Generate as many resume points as possible in total\n` +
-    `4. Use varied formats:\n` +
-    `   - Technical implementation\n` +
-    `   - Performance optimization\n` +
-    `   - Process improvement\n` +
-    `   - Team collaboration\n` +
+    `3. Output ONLY valid JSON array format with double quotes\n` +
+    `4. FORBIDDEN: Markdown, triple backticks, or any non-JSON text\n` +
     `5. Example format for "React":\n` +
-    `   "Developed 15+ reusable React components reducing development time by 40%"\n` +
-    `   "Migrated legacy jQuery UI to React, improving page load speed by 2.5s"\n` +
-    `6. Output a JSON array:  [resumePoint1, resumePoint2]`;
+    `   ["Developed 15+ reusable React components reducing development time by 40%",\n` +
+    `    "Migrated legacy jQuery UI to React, improving page load speed by 2.5s"]\n\n` +
+    `OUTPUT STRICTLY IN THIS FORMAT:\n` +
+    `["point1", "point2", "point3", ...]`;
 
   try {
     const rawResponse: string = (await promptUtil(prompt)) ?? "";
-    return JSON.parse(rawResponse);
+
+    // Sanitize response before parsing
+    const sanitized = rawResponse
+      .replace(/[\u201C\u201D]/g, '"') // Replace smart quotes
+      .replace(/,\s*]/g, "]") // Remove trailing commas
+      .replace(/^[^[]+/, "") // Remove non-JSON prefix
+      .replace(/[^\]]+$/, "") // Remove non-JSON suffix
+      .trim();
+
+    return JSON.parse(sanitized);
   } catch (error) {
-    // Log the exact error message for debugging
     const errorMessage = error instanceof Error ? error.message : JSON.stringify(error);
     throw new Error(`Resume points generation failed: ${errorMessage}`);
   }

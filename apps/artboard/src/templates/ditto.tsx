@@ -25,7 +25,7 @@ import { Fragment } from "react";
 import { BrandIcon } from "../components/brand-icon";
 import { Picture } from "../components/picture";
 import { highlightDiffInHtml, SmartDiff } from "../components/smart-diff";
-// import { oldResume } from "../providers/old.js";
+// import { updatedResume } from "../providers/old.js";
 import { useArtboardStore } from "../store/artboard";
 import type { TemplateProps } from "../types/template";
 
@@ -106,17 +106,17 @@ const Header = () => {
 
 const Summary = () => {
   const section = useArtboardStore((state) => state.resume.sections.summary);
-  const oldResume = useArtboardStore((state) => state.oldResume);
+  const updatedResume = useArtboardStore((state) => state.updatedResume);
 
   if (!section.visible || isEmptyString(section.content)) return null;
-  if (oldResume) {
+  if (updatedResume) {
     return (
       <section id={section.id}>
         <h4 className="mb-2 text-base font-bold">{section.name}</h4>
         <div style={{ columns: section.columns }} className="wysiwyg">
           <SmartDiff
-            oldValue={sanitize(get(oldResume, "sections.summary.content", ""))} // Ensures clean input
-            newValue={sanitize(section.content)}
+            newValue={sanitize(get(updatedResume, "sections.summary.content", ""))} // Ensures clean input
+            oldValue={sanitize(section.content)}
           />
         </div>
       </section>
@@ -210,7 +210,7 @@ const Section = <T,>({
   summaryKey,
   keywordsKey,
 }: SectionProps<T>) => {
-  const oldResume = useArtboardStore((store) => store.oldResume);
+  const updatedResume = useArtboardStore((store) => store.updatedResume);
   if (!section.visible || section.items.length === 0) return null;
 
   return (
@@ -229,14 +229,14 @@ const Section = <T,>({
             const summary = (summaryKey && get(item, summaryKey, "")) as string | undefined;
             const keywords = (keywordsKey && get(item, keywordsKey, [])) as string[] | undefined;
             const oldItem =
-              (oldResume && find(oldResume.sections.experience.items, { id: item.id })) || {};
+              (updatedResume && find(updatedResume.sections.experience.items, { id: item.id })) || {};
             const oldSummary = oldItem.summary || "";
             // ✅ Apply word-level diff while keeping original HTML structure
             const highlightedSummary =
-              oldResume && summary && highlightDiffInHtml(oldSummary, summary);
+              updatedResume && summary && highlightDiffInHtml(oldSummary, summary);
             const oldKeywords =
-              oldResume && keywordsKey
-                ? get(find(oldResume.sections.skills.items, { name: item.name }), keywordsKey, [])
+              updatedResume && keywordsKey
+                ? get(find(updatedResume.sections.skills.items, { name: item.name }), keywordsKey, [])
                 : undefined;
             return (
               <div
@@ -253,14 +253,14 @@ const Section = <T,>({
                 </div>
 
                 {/* ✅ Render the diffed summary while preserving the correct formatting */}
-                {oldResume && summary !== undefined && !isEmptyString(summary) && (
+                {updatedResume && summary !== undefined && !isEmptyString(summary) && (
                   <div
                     dangerouslySetInnerHTML={{ __html: highlightedSummary }}
                     className="wysiwyg"
                   />
                 )}
 
-                {!oldResume && summary !== undefined && !isEmptyString(summary) && (
+                {!updatedResume && summary !== undefined && !isEmptyString(summary) && (
                   <div
                     dangerouslySetInnerHTML={{ __html: sanitize(summary) }}
                     className="wysiwyg"
@@ -271,13 +271,13 @@ const Section = <T,>({
                 {level !== undefined && level > 0 && <Rating level={level} />}
 
                 {/* ✅ SmartDiff for Keywords */}
-                {oldResume && keywords !== undefined && keywords.length > 0 && (
+                {updatedResume && keywords !== undefined && keywords.length > 0 && (
                   <p className="text-sm">
-                    <SmartDiff newValue={keywords.join(", ")} oldValue={oldKeywords.join(", ")} />
+                    <SmartDiff oldValue={keywords.join(", ")} newValue={oldKeywords.join(", ")} />
                   </p>
                 )}
 
-                {!oldResume && keywords !== undefined && keywords.length > 0 && (
+                {!updatedResume && keywords !== undefined && keywords.length > 0 && (
                   <p className="text-sm">{keywords.join(", ")}</p>
                 )}
 
@@ -321,8 +321,8 @@ type ExperienceItem = {
 };
 const Experience = () => {
   const section = useArtboardStore((state) => state.resume.sections.experience);
-  const oldResume = useArtboardStore((state) => state.oldResume);
-  const oldExperienceItems: ExperienceItem[] = get(oldResume, "sections.experience.items", []);
+  const updatedResume = useArtboardStore((state) => state.updatedResume);
+  const oldExperienceItems: ExperienceItem[] = get(updatedResume, "sections.experience.items", []);
 
   return (
     <Section<Experience> section={section} urlKey="url" summaryKey="summary">
@@ -331,30 +331,30 @@ const Experience = () => {
         const oldItem = oldExperienceItems.find((i) => i.id === item.id) ?? ({} as ExperienceItem);
         return (
           <div className="flex items-start justify-between group-[.sidebar]:flex-col group-[.sidebar]:items-start">
-            {oldResume ? (
+            {updatedResume ? (
               <>
                 <div className="shrink-0 text-left">
                   <div>
                     <SmartDiff
-                      oldValue={sanitize(oldItem.company || "")}
-                      newValue={sanitize(item.company)}
+                      newValue={sanitize(oldItem.company || "")}
+                      oldValue={sanitize(item.company)}
                       className="font-bold"
                     />
                   </div>
                   <div>
                     <SmartDiff
-                      oldValue={sanitize(oldItem.position || "")}
-                      newValue={sanitize(item.position)}
+                      newValue={sanitize(oldItem.position || "")}
+                      oldValue={sanitize(item.position)}
                     />
                   </div>
                 </div>
                 <div className="shrink-0 text-right">
                   <SmartDiff
-                    oldValue={oldItem.date || ""}
-                    newValue={item.date}
+                    newValue={oldItem.date || ""}
+                    oldValue={item.date}
                     className="font-bold"
                   />
-                  <SmartDiff oldValue={oldItem.location || ""} newValue={item.location} />
+                  <SmartDiff newValue={oldItem.location || ""} oldValue={item.location} />
                 </div>
               </>
             ) : (
@@ -457,12 +457,12 @@ const Certifications = () => {
 
 const Skills = () => {
   const section = useArtboardStore((state) => state.resume.sections.skills);
-  const oldResume = useArtboardStore((state) => state.oldResume);
+  const updatedResume = useArtboardStore((state) => state.updatedResume);
   return (
     <Section<Skill> section={section} levelKey="level" keywordsKey="keywords">
       {(item) => {
         const oldName = get(
-          find(oldResume?.sections.skills.items, { name: item.name }),
+          find(updatedResume?.sections.skills.items, { name: item.name }),
           "name",
           "",
         );
@@ -470,8 +470,8 @@ const Skills = () => {
           <div>
             <div className="font-bold">
               {/* {item.name} */}
-              {oldResume ? (
-                <SmartDiff oldValue={oldName} newValue={item.name} />
+              {updatedResume ? (
+                <SmartDiff newValue={oldName} oldValue={item.name} />
               ) : (
                 <span className="font-bold">{item.name}</span>
               )}

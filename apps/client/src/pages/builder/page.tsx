@@ -15,14 +15,14 @@ export const BuilderPage = () => {
   const setFrameRef = useBuilderStore((state) => state.frame.setRef);
 
   const resume = useResumeStore((state) => state.resume);
-  const oldResume = useResumeStore((state) => state.oldResume);
+  const updatedResume = useResumeStore((state) => state.updatedResume);
   const title = useResumeStore((state) => state.resume.title);
 
   const syncResumeToArtboard = useCallback(() => {
     setImmediate(() => {
       if (!frameRef?.contentWindow) return;
       const message = { type: "SET_RESUME", payload: resume.data };
-      const oldMessage = { type: "SET_OLD_RESUME", payload: oldResume.data };
+      const oldMessage = { type: "SET_UPDATED_RESUME", payload: updatedResume.data };
       frameRef.contentWindow.postMessage(oldMessage, "*");
       frameRef.contentWindow.postMessage(message, "*");
     });

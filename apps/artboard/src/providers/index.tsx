@@ -4,20 +4,18 @@ import { Outlet } from "react-router";
 
 import { helmetContext } from "../constants/helmet";
 import { useArtboardStore } from "../store/artboard";
-// import { updatedResume } from './new.js';
-// import { oldResume } from './old.js';
 
 export const Providers = () => {
   const resume = useArtboardStore((state) => state.resume);
   const setResume = useArtboardStore((state) => state.setResume);
-  const setOldResume = useArtboardStore((state) => state.setOldResume);
+  const setUpdatedResume = useArtboardStore((state) => state.setUpdatedResume);
 
   useEffect(() => {
     const handleMessage = (event: MessageEvent) => {
       if (event.origin !== window.location.origin) return;
       if (event.data.type === "SET_RESUME") setResume(event.data.payload);
-      if (event.data.type === "SET_OLD_RESUME"){
-        setOldResume(event.data.payload);
+      if (event.data.type === "SET_UPDATED_RESUME") {
+        setUpdatedResume(event.data.payload);
       }
     };
 
@@ -32,7 +30,7 @@ export const Providers = () => {
     const resumeData = window.localStorage.getItem("resume");
     const oldResumeData = window.localStorage.getItem("oldResume");
     if (resumeData) setResume(JSON.parse(resumeData));
-    if (oldResumeData) setOldResume(JSON.parse(oldResumeData));
+    if (oldResumeData) setUpdatedResume(JSON.parse(oldResumeData));
   }, [window.localStorage.getItem("resume"), window.localStorage.getItem("oldResume")]);
 
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition

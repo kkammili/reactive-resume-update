@@ -68,7 +68,7 @@ export const ResumeDialog = () => {
 
   // const oldResume = useResumeStore((state) => state);
   const navigate = useNavigate();
-  const setOldResume = useResumeStore((state)=> state.setOldResume)
+  const setUpdatedResume = useResumeStore((state) => state.setUpdatedResume);
 
   const isCreate = mode === "create";
   const isUpdate = mode === "update";
@@ -171,22 +171,8 @@ export const ResumeDialog = () => {
       data: payload.item,
       tempType: selectValue,
     });
-
-    // Get current state BEFORE update
-    // const oldResume = useResumeStore.getState().resume;
-
-    // Update the store
-    // useResumeStore.setOldResume({ resume: res });
-    setOldResume(res);
-
-    // Get updated state AFTER update
-    // const newResume = useResumeStore.getState().resume;
+    setUpdatedResume(res);
     close();
-    // console.log(oldResume,  '<----- resume prior')
-    // localStorage.setItem("oldResume", JSON.stringify(oldResume));
-    // console.log(res, "<----- check res here");
-    // useResumeStore.setState({ resume: res });
-    // console.log(oldResume, '<------ resume after')
     void navigate(`/builder/${res.id}`);
   };
 

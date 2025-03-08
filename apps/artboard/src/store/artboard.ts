@@ -3,18 +3,18 @@ import { create } from "zustand";
 
 export type ArtboardStore = {
   resume: ResumeData;
-  oldResume: ResumeData | null;
+  updatedResume: ResumeData | null;
   setResume: (resume: ResumeData) => void;
-  setOldResume: (oldResume: ResumeData) => void;
+  setUpdatedResume: (oldResume: ResumeData) => void;
 };
 
 export const useArtboardStore = create<ArtboardStore>()((set) => ({
   resume: null as unknown as ResumeData,
-  oldResume: null as unknown as ResumeData,
+  updatedResume: null as unknown as ResumeData,
   setResume: (resume) => {
     set({ resume });
   },
-  setOldResume: (oldResume) => {
-    set({ oldResume });
+  setUpdatedResume: (updatedResume) => {
+    set({ updatedResume });
   },
 }));
