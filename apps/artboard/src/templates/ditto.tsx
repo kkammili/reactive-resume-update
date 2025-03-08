@@ -228,12 +228,12 @@ const Section = <T,>({
             const level = (levelKey && get(item, levelKey, 0)) as number | undefined;
             const summary = (summaryKey && get(item, summaryKey, "")) as string | undefined;
             const keywords = (keywordsKey && get(item, keywordsKey, [])) as string[] | undefined;
-            const oldItem =
+            const updatedItem =
               (updatedResume && find(updatedResume.sections.experience.items, { id: item.id })) || {};
-            const oldSummary = oldItem.summary || "";
+            const updatedSummary = updatedItem.summary || "";
             // ✅ Apply word-level diff while keeping original HTML structure
             const highlightedSummary =
-              updatedResume && summary && highlightDiffInHtml(oldSummary, summary);
+              updatedResume && summary && highlightDiffInHtml(summary, updatedSummary);
             const oldKeywords =
               updatedResume && keywordsKey
                 ? get(find(updatedResume.sections.skills.items, { name: item.name }), keywordsKey, [])

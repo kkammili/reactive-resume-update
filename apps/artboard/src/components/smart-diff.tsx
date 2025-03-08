@@ -12,37 +12,47 @@ type SmartDiffProps = {
   newValue: string;
   className?: string; // ✅ Added className prop
 };
-
 export const highlightDiffInHtml = (oldHtml: string, newHtml: string): string => {
   const oldRoot = parse(sanitize(oldHtml));
   const newRoot = parse(sanitize(newHtml));
 
-  const processAddedNode = (node: any): string => {
-    if (node.nodeType === 3) {
-      // Text node
-      return `<span class="diff-added">${node.text}</span>`;
+  // Add this helper function to handle node wrapping
+  const wrapNode = (node: any, content: string): string => {
+    if (!node.rawTagName || node.rawTagName.toLowerCase() === 'null') {
+      return content; // Skip invalid/null tags
     }
     const attributes = Object.entries(node.attrs)
       .map(([k, v]) => `${k}="${v}"`)
       .join(" ");
+    return `<${node.rawTagName}${attributes ? " " + attributes : ""}>${content}</${node.rawTagName}>`;
+  };
+
+  const processAddedNode = (node: any): string => {
+    if (node.nodeType === 3) {
+      return `<span class="diff-added">${node.text}</span>`;
+    }
     const children = node.childNodes.map((child: any) => processAddedNode(child)).join("");
-    return `<${node.rawTagName}${attributes ? " " + attributes : ""}>${children}</${node.rawTagName}>`;
+    return wrapNode(node, children);
   };
 
   const processRemovedNode = (node: any): string => {
     if (node.nodeType === 3) {
-      // Text node
       return `<span class="diff-removed">${node.text}</span>`;
     }
-    const attributes = Object.entries(node.attrs)
-      .map(([k, v]) => `${k}="${v}"`)
-      .join(" ");
     const children = node.childNodes.map((child: any) => processRemovedNode(child)).join("");
-    return `<${node.rawTagName}${attributes ? " " + attributes : ""}>${children}</${node.rawTagName}>`;
+    return wrapNode(node, children);
   };
 
   const applyDiff = (oldNode: any, newNode: any): string => {
-    // Handle text node diffing
+    // Handle root document node
+    if (oldNode?.nodeType === 9 || newNode?.nodeType === 9) {
+      return applyDiff(
+        oldNode?.nodeType === 9 ? oldNode.childNodes[0] : oldNode,
+        newNode?.nodeType === 9 ? newNode.childNodes[0] : newNode
+      );
+    }
+
+    // Existing diff logic
     if (oldNode?.nodeType === 3 && newNode?.nodeType === 3) {
       const diffs = dmp.diff_main(oldNode.text, newNode.text);
       dmp.diff_cleanupSemantic(diffs);
@@ -55,28 +65,26 @@ export const highlightDiffInHtml = (oldHtml: string, newHtml: string): string =>
         .join("");
     }
 
-    // Handle structural changes
     if (!oldNode) return processAddedNode(newNode);
     if (!newNode) return processRemovedNode(oldNode);
 
-    // Handle tag mismatch
-    if (oldNode.rawTagName !== newNode.rawTagName) {
+    // Handle tag mismatch including null tags
+    if ((oldNode.rawTagName || 'null') !== (newNode.rawTagName || 'null')) {
       return `${processRemovedNode(oldNode)}${processAddedNode(newNode)}`;
     }
-
-    // Process matching tags
-    const attributes = Object.entries(newNode.attrs)
-      .map(([k, v]) => `${k}="${v}"`)
-      .join(" ");
 
     const children = newNode.childNodes
       .map((newChild: any, i: number) => applyDiff(oldNode.childNodes[i], newChild))
       .join("");
 
-    return `<${newNode.rawTagName}${attributes ? " " + attributes : ""}>${children}</${newNode.rawTagName}>`;
+    return wrapNode(newNode, children);
   };
 
-  return applyDiff(oldRoot, newRoot);
+  // Start with first meaningful child node
+  return applyDiff(
+    oldRoot.nodeType === 9 ? oldRoot.childNodes[0] : oldRoot,
+    newRoot.nodeType === 9 ? newRoot.childNodes[0] : newRoot
+  );
 };
 
 const TextDiff: React.FC<SmartDiffProps> = ({ oldValue, newValue, className }) => {
